@@ -28,7 +28,8 @@ async fn main() {
         configuration.personal_access_token.clone(),
         configuration.username.clone(),
         configuration.repository_name.clone(),
-    );
+    )
+    .expect("Fail to create the Git Client");
     git_client.pull().expect(
         format!(
             "Fail to pull origin/{} for {}",
@@ -39,6 +40,7 @@ async fn main() {
 
     let state = state::AppState {
         app_name: "OxydeVault".to_string(),
+        git_client,
     };
 
     let app = router::create_router(state).layer(tower_http::trace::TraceLayer::new_for_http());

@@ -11,10 +11,13 @@ pub enum AppError {
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let (status, error_message) = match self {
-            AppError::InternalServerError(_) => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Internal Server Error".to_string(),
-            ),
+            AppError::InternalServerError(err) => {
+                tracing::error!("Internal Server Error: {}", err);
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Internal Server Error".to_string(),
+                )
+            },
             AppError::NotFound(message) => (StatusCode::NOT_FOUND, message),
         };
 

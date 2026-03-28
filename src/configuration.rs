@@ -16,6 +16,6 @@ impl Configuration {
         dotenvy::dotenv().ok();
 
         // 2. Parse the environment variables into the Configuration struct
-        envy::from_env::<Configuration>().expect("Failed to load the configuration")
+        envy::from_env::<Configuration>().expect("Fail to load the configuration")
     }
 }

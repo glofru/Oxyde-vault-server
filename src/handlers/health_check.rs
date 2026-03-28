@@ -6,6 +6,7 @@ use axum::{Json, Router};
 use serde::Serialize;
 
 #[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
 struct HealthCheckResponse {
     app_name: String,
     status: String,
