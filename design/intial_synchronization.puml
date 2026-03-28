@@ -1,0 +1,9 @@
+@startuml
+participant "Obsidian" as obsidian
+participant "Oxyde Vault Server" as ovs
+
+obsidian -> ovs: GET /revisions/latest
+ovs -> obsidian: <revision_id>
+obsidian -> ovs: GET /revisions/<revision_id>/pull
+ovs -> obsidian: files
+@enduml

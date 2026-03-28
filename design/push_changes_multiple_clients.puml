@@ -1,0 +1,17 @@
+@startuml
+participant "Obsidian A" as obsidianA
+participant "Oxyde Vault Server" as ovs
+participant "Obsidian B" as obsidianB
+
+obsidianA -> ovs: POST /api/v1/revisions/push
+note right
+  First push gets lock to push
+endnote
+obsidianB -> ovs: POST /api/v1/revisions/push
+ovs -> obsidianA: <new_revision_id>
+note right
+  Lock is released
+endnote
+ovs -> obsidianB: <new_revision_id> with changes
+
+@enduml

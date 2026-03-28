@@ -1,0 +1,10 @@
+@startuml
+participant "Obsidian A" as obsidianA
+participant "Oxyde Vault Server" as ovs
+participant "Obsidian B" as obsidianB
+
+obsidianA -> ovs: POST /api/v1/revisions/push
+ovs -> obsidianA: <new_revision_id>
+obsidianB -> ovs: GET /api/v1/revisions/<revision_id>/pull?since_revision=<revision_id>
+ovs -> obsidianB: <files>
+@enduml
