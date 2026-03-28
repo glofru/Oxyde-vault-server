@@ -1,6 +1,8 @@
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
+use crate::configuration::Configuration;
 
+mod configuration;
 mod errors;
 mod handlers;
 mod router;
@@ -8,10 +10,12 @@ mod state;
 
 #[tokio::main]
 async fn main() {
+    let configuration = Configuration::load();
+    
     tracing_subscriber::registry()
         .with(tracing_subscriber::EnvFilter::new(
-            std::env::var("RUST_LOG".to_string())
-                .unwrap_or_else(|_| "info,tower_http=debug".into()),
+            configuration.rust_log
+                .unwrap_or_else(|| "info,tower_http=debug".into()),
         ))
         .with(tracing_subscriber::fmt::layer())
         .init();
@@ -24,7 +28,7 @@ async fn main() {
 
     let listener = tokio::net::TcpListener::bind(format!(
         "0.0.0.0:{}",
-        std::env::var("PORT".to_string()).unwrap_or_else(|_| "3000".to_string())
+        configuration.port
     ))
     .await
     .unwrap();
