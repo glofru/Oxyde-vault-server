@@ -1,0 +1,12 @@
+services:
+  oxyde-vault-server:
+    image: oxyde-vault-server:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - BRANCH=main
+      - PERSONAL_ACCESS_TOKEN=
+      - PORT=3000
+      - RUST_LOG=info
+      - USERNAME=
+      - REPOSITORY_NAME=
