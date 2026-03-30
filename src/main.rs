@@ -23,7 +23,7 @@ async fn main() {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    let git_client = GitClient::new(
+    let mut git_client = GitClient::new(
         configuration.branch.clone(),
         configuration.personal_access_token.clone(),
         configuration.username.clone(),

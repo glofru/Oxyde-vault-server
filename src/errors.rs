@@ -3,7 +3,9 @@ use axum::response::{IntoResponse, Response};
 use axum::Json;
 use serde_json::json;
 
+#[derive(Debug)]
 pub enum AppError {
+    BadRequest(String),
     InternalServerError(anyhow::Error),
     NotFound(String),
 }
@@ -11,13 +13,14 @@ pub enum AppError {
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let (status, error_message) = match self {
+            AppError::BadRequest(message) => (StatusCode::BAD_REQUEST, message),
             AppError::InternalServerError(err) => {
                 tracing::error!("Internal Server Error: {}", err);
                 (
                     StatusCode::INTERNAL_SERVER_ERROR,
                     "Internal Server Error".to_string(),
                 )
-            },
+            }
             AppError::NotFound(message) => (StatusCode::NOT_FOUND, message),
         };
 

@@ -2,13 +2,17 @@
 
 Oxyde Vault is an Obsidian plugin to sync your Obsidian notes into a self-hosted web-server synced with Git.
 
-The plugin is designed to sync data smoothly, with automatic conflict resolution. The setup of the plugin and self-hosted server is designed to be simple and effortless.
+The plugin is designed to sync data smoothly, with automatic conflict resolution. The setup of the plugin and
+self-hosted server is designed to be simple and effortless.
 
 # Architecture
 
 The system consists of three main components:
-- Obsidian Plugin (Client): Tracks file modifications, deletions, and creations. It communicates with the Rust server via REST APIs, tracking only the last known "sync revision".
-- Rust Web Container (Server): It maintains a local clone of the remote repository, processes incoming changes, handles merges, and pushes to the Git server.
+
+- Obsidian Plugin (Client): Tracks file modifications, deletions, and creations. It communicates with the Rust server
+  via REST APIs, tracking only the last known "sync revision".
+- Rust Web Container (Server): It maintains a local clone of the remote repository, processes incoming changes, handles
+  merges, and pushes to the Git server.
 - Git server (Remote): The ultimate source of truth and backup.
 
 # Flows
@@ -28,6 +32,7 @@ The system consists of three main components:
 # APIs
 
 ## GET /api/v1/revisions/latest
+
 - Response:
 
 ```json
@@ -36,10 +41,11 @@ The system consists of three main components:
 }
 ```
 
-## GET /api/v1/revisions/<revision_id>/pull?since_revision=<revision_id>&page=<page_id>
+## GET /api/v1/revisions/<revision_id>?since_revision=<revision_id>&page=<page_id>
+
 - Response:
 
-  - 200 - Success:
+    - 200 - Success:
 
 ```json
 {
@@ -64,9 +70,10 @@ The system consists of three main components:
 }
 ```
 
-  - 404 - Not found
+- 404 - Not found
 
 ## POST /api/v1/revisions/push
+
 - Body:
 
 ```json
@@ -93,7 +100,7 @@ The system consists of three main components:
 
 - Response:
 
-  - 200 - Success:
+    - 200 - Success:
 
 ```json
 {
