@@ -1,5 +1,7 @@
 use crate::configuration::Configuration;
 use crate::git::git_client::GitClient;
+use axum::http::HeaderValue;
+use tower_http::cors::CorsLayer;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::util::SubscriberInitExt;
 
@@ -43,7 +45,11 @@ async fn main() {
         git_client,
     };
 
-    let app = router::create_router(state).layer(tower_http::trace::TraceLayer::new_for_http());
+    let app = router::create_router(state)
+        .layer(tower_http::trace::TraceLayer::new_for_http())
+        .layer(
+            CorsLayer::new().allow_origin(["app://obsidian.md".parse::<HeaderValue>().unwrap()]),
+        );
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", configuration.port))
         .await

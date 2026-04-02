@@ -62,8 +62,20 @@ impl GitClient {
         maximum_size: usize,
     ) -> Result<GetCommitDataResponse, AppError> {
         let repository = self.repository.lock().unwrap();
+
+        tracing::info!("Getting commit {}", commit_id);
         let commit = git_helper::get_commit(&repository, commit_id)?;
+        tracing::info!(
+            "Got commit {} with message: {}",
+            commit_id,
+            commit.message().unwrap_or("null")
+        );
+
         let tree = commit.tree()?;
+
+        tracing::info!("Walking tree of commit {}", commit_id);
+        let from_file_id =
+            from_file_id.inspect(|value| tracing::info!("Starting from file id {}", value));
 
         let mut files = Vec::new();
         let mut skip = from_file_id.is_some();
@@ -109,6 +121,8 @@ impl GitClient {
             TreeWalkResult::Ok
         });
 
+        tracing::info!("Walked commit {} with {} files", commit_id, files.len());
+
         match walk_result {
             Ok(_) => Ok(GetCommitDataResponse {
                 files,
@@ -116,8 +130,11 @@ impl GitClient {
             }),
             Err(error) => {
                 let Some(last_file_id) = end_file_id else {
+                    tracing::error!("Walking tree aborted but last file id is missing");
                     return Err(AppError::InternalServerError(anyhow::Error::new(error)));
                 };
+
+                tracing::info!("Last file id {}", last_file_id);
 
                 Ok(GetCommitDataResponse {
                     files,
